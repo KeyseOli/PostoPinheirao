@@ -718,7 +718,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', -apple-s
 <!-- NOTAS 1 - CIDADE 1 -->
 <div id="page-nota1" class="page">
 <div class="inner">
-  <div class="page-hdr"><div class="page-title">📝 Notas de Chapadinha <small>Controle de vendas a prazo / fiado</small></div><div class="btn-group"><button class="btn btn-outline" onclick="exportNotas1()">💾 Backup</button><button class="btn btn-outline" onclick="exportNotas1CSV()">📊 CSV</button><button class="btn btn-orange" onclick="openNotaModal('nota1')">+ Nova Nota</button></div></div>
+  <div class="page-hdr"><div class="page-title">📝 Notas de Chapadinha <small>Controle de vendas a prazo / fiado</small></div><div class="btn-group"><button class="btn btn-outline" onclick="exportNotas1()">💾 Backup</button><button class="btn btn-outline" onclick="exportNotas1CSV()">📊 CSV</button><button class="btn btn-outline" onclick="document.getElementById('nota1-imp').click()">📂 Importar</button><button class="btn btn-orange" onclick="openNotaModal('nota1')">+ Nova Nota</button></div></div>
   
   <div class="nota-sum-grid">
     <div class="nota-sum-card nota-sum-green"><div class="nota-sum-label">💰 Total a Receber</div><div class="nota-sum-val" id="nota1-total-receber">R$ 0,00</div></div>
@@ -762,7 +762,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', -apple-s
 <!-- NOTAS 2 - CIDADE 2 -->
 <div id="page-nota2" class="page">
 <div class="inner">
-  <div class="page-hdr"><div class="page-title">📝 Notas de Anapurus <small>Controle de vendas a prazo / fiado</small></div><div class="btn-group"><button class="btn btn-outline" onclick="exportNotas2()">💾 Backup</button><button class="btn btn-outline" onclick="exportNotas2CSV()">📊 CSV</button><button class="btn btn-purple" onclick="openNotaModal('nota2')">+ Nova Nota</button></div></div>
+  <div class="page-hdr"><div class="page-title">📝 Notas de Anapurus <small>Controle de vendas a prazo / fiado</small></div><div class="btn-group"><button class="btn btn-outline" onclick="exportNotas2()">💾 Backup</button><button class="btn btn-outline" onclick="exportNotas2CSV()">📊 CSV</button><button class="btn btn-outline" onclick="document.getElementById('nota2-imp').click()">📂 Importar</button><button class="btn btn-purple" onclick="openNotaModal('nota2')">+ Nova Nota</button></div></div>
   
   <div class="nota-sum-grid">
     <div class="nota-sum-card nota-sum-green"><div class="nota-sum-label">💰 Total a Receber</div><div class="nota-sum-val" id="nota2-total-receber">R$ 0,00</div></div>
@@ -829,6 +829,8 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', -apple-s
 <input type="file" id="fc-imp" accept=".json" style="display:none;" onchange="importFC(event)">
 <input type="file" id="mov-imp" accept=".json" style="display:none;" onchange="importMOV(event)">
 <input type="file" id="est-imp" accept=".json" style="display:none;" onchange="importEst(event)">
+<input type="file" id="nota1-imp" accept=".json" style="display:none;" onchange="importNotas1(event)">
+<input type="file" id="nota2-imp" accept=".json" style="display:none;" onchange="importNotas2(event)">
 <!-- MODAL NOTA (para ambas cidades) -->
 <div class="overlay" id="mov-fc-modal"><div class="modal"><h2>💵 <span id="mov-modal-title">Novo Lançamento</span></h2><input type="hidden" id="mm-id">
 <label>Tipo de Lançamento</label>
@@ -2544,6 +2546,8 @@ function deleteNota(cidade, id) {
 
 function exportNotas1() { dl(JSON.stringify(notas1Data, null, 2), `backup_notas1_${today()}.json`); showToast('💾 Backup Notas 1 salvo!'); }
 function exportNotas2() { dl(JSON.stringify(notas2Data, null, 2), `backup_notas2_${today()}.json`); showToast('💾 Backup Notas 2 salvo!'); }
+function importNotas1(e) { readJSON(e, d => { const ok = confirm(`Importar ${d.length} notas?\nOK = Substituir · Cancelar = Mesclar`); if (ok) notas1Data = d; else { const ids = new Set(notas1Data.map(x => x.id)); d.forEach(i => { if (!ids.has(i.id)) notas1Data.push(i); }); } saveNotas1(); renderNotas1(); showToast('✅ Importado!'); }); }
+function importNotas2(e) { readJSON(e, d => { const ok = confirm(`Importar ${d.length} notas?\nOK = Substituir · Cancelar = Mesclar`); if (ok) notas2Data = d; else { const ids = new Set(notas2Data.map(x => x.id)); d.forEach(i => { if (!ids.has(i.id)) notas2Data.push(i); }); } saveNotas2(); renderNotas2(); showToast('✅ Importado!'); }); }
 
 document.getElementById('nota1-search')?.addEventListener('input', renderNotas1);
 document.getElementById('nota2-search')?.addEventListener('input', renderNotas2);
